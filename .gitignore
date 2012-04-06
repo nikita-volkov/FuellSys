@@ -1,0 +1,6 @@
+.idea
+*.iml
+*.sublime*
+node_modules
+target
+lib
