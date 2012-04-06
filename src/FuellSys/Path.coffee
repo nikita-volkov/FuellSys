@@ -1,4 +1,4 @@
-{Action, Actions, Array, Arrays, Environment, Function, Keys, Map, Number, Object, Optional, Pair, Pairs, String, Strings} = require "../FueL"
+{Action, Actions, Array, Arrays, Environment, Function, FunctionByLengthMap, FunctionByTypesPairs, FunctionTemplate, Keys, Map, Number, Object, Optional, Pair, Pairs, RegExp, Set, SortedArray, String, Strings, Text} = require "Fuell"
 FS = require "fs"
 Path = require "path"
 
@@ -189,8 +189,9 @@ remove = (path, cb) ->
   else cb
 
 exports.removeDir = 
-removeDir = (path, cb) ->
-  removeDirContents dir, -> FS.rmdir dir, cb
+removeDir = (dir, cb) ->
+  if dirExists dir
+    removeDirContents dir, -> FS.rmdir dir, cb
 
 exports.removeFile = 
 removeFile = FS.unlink

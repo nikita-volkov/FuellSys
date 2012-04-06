@@ -1,6 +1,6 @@
 describe "Path", ->
-  Path = require "../../src/Util/Path"
-  Environment = require "../../src/Util/Environment"
+  Path = require "../../src/FuellSys/Path"
+  Environment = require "../../src/FuellSys/Environment"
   FS = require "fs"
 
   describe "Filters", ->
@@ -60,7 +60,7 @@ describe "Path", ->
         FS.mkdirSync dir, "0777"
         expect(Path.exists dir).toBeTruthy()
         runs -> Path.removeDir dir, ->
-        waits 1
+        waits 10
         runs -> expect(Path.exists dir).toBeFalsy()
 
       it "removes a temporary dir with subdirs", ->
@@ -81,7 +81,7 @@ describe "Path", ->
         waits 10
         runs -> expect(Path.exists dir).toBeFalsy()
 
-    describe "prepareDir", ->
+    describe "cleanDir", ->
       it "works", ->
         dir = Environment.tmpDir() + "/" + Environment.uniqueName()
         FS.mkdirSync "#{dir}", "0777"
@@ -93,7 +93,7 @@ describe "Path", ->
         FS.mkdirSync "#{dir}/1/dsf", "0777"
         FS.mkdirSync "#{dir}/3", "0777"
         FS.mkdirSync "#{dir}/10", "0777"
-        runs -> Path.prepareDir dir, ->
+        runs -> Path.cleanDir dir, ->
         waits 10
         runs -> 
           expect(Path.exists dir).toBeTruthy()

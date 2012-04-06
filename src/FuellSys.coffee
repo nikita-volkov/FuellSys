@@ -1,9 +1,4 @@
-
-
-
-exports[k] = v for k, v of require "./FueLSys/#{name}" for name in [
-  "Dir"
-  "File"
+exports[k] = v for k, v of require "./FuellSys/#{name}" for name in [
   "Path"
   "Environment"
 ]

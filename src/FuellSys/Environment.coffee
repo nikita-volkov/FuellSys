@@ -1,6 +1,5 @@
-FS        = require "fs"
-Strings   = require "../FueL/Strings"
-Function  = require "../FueL/Function"
+{Action, Actions, Array, Arrays, Environment, Function, FunctionByLengthMap, FunctionByTypesPairs, FunctionTemplate, Keys, Map, Number, Object, Optional, Pair, Pairs, RegExp, Set, SortedArray, String, Strings, Text} = require "Fuell"
+FS = require "fs"
 
 exports.tmpDir = 
 tmpDir = Function.disposable ->

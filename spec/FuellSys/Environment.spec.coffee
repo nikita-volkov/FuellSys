@@ -1,6 +1,6 @@
 describe "Environment", ->
-  {tmpDir, uniqueName} = require "../../src/Util/Environment"
-  Path = require "../../src/Util/Path"
+  {tmpDir, uniqueName} = require "../../src/FuellSys/Environment"
+  Path = require "../../src/FuellSys/Path"
 
   describe "tmpDir", ->
     it "is not an empty string", ->
