@@ -2,8 +2,8 @@
   "author": "Nikita Volkov <nikita.y.volkov@mail.ru> (http://www.flipart.ru)",
   "name": "FuellSys",
   "description": "",
-  "keywords": [],
-  "version": "0.1.0",
+  "keywords": ["fuell", "path", "filesystem", "environment", "system"],
+  "version": "0.1.1",
   "homepage": null,
   "repository": {
     "type": "git",
@@ -17,9 +17,9 @@
     "test": "jasmine-node spec --coffee"
   },
   "dependencies": {
-    "Fuell": "0.1.2"
+    "Fuell": "0.1.3"
   },
   "devDependencies": {
-    "jasmine-node": "1.0.x"
+    "jasmine-node": "1.0.20"
   }
 }

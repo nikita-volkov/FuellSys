@@ -2,8 +2,14 @@
 FS = require "fs"
 Path = require "path"
 
+exports.isAbsolute = 
+isAbsolute = (p) ->
+  throw "Unimplemented: Path.isAbsolute"
+
 exports.normalized = 
-normalized = 
+normalized = (p) -> 
+  simplified correct p
+
 exports.correct = 
 correct = (p) -> 
   String.replacing /^\.\/|^\.$/, "",
@@ -33,9 +39,11 @@ exports.parts =
 parts = (p) ->
   String.extracts /^(.*?\/)?([^\/]+?)?(?:\.([^\/\.]*))?$/, p
 
-exports.relative = # deprecated
-exports.relativeTo = 
-relativeTo = (to, from) -> 
+exports.relative = 
+relative = (to, from) ->
+  ###
+  deprecated in favor of `relativeTo`
+  ###
   to = String.splitBy "/", simplified correct to
   from = Array.allButLast String.splitBy "/", simplified correct from
   throw "Either both paths must be absolute or none" if (to[0] == "") != (from[0] == "")
@@ -44,6 +52,11 @@ relativeTo = (to, from) ->
     to.shift(); from.shift()
 
   Strings.interlayedUnion "/", Array.union to, Number.times "..", Array.length from
+
+exports.from = 
+exports.relativeTo = 
+relativeTo = (target, path) -> 
+  relative path, target
 
 exports.simplified = 
 simplified = (p) ->
@@ -56,8 +69,6 @@ simplified = (p) ->
   if debt > 0 
     r = Array.union (Number.times "..", debt), r
   Strings.interlayedUnion "/", Array.reversed r
-
-
 
 exports.exists = 
 exists = Path.existsSync
@@ -209,5 +220,6 @@ saveFile = (data, file, cb) ->
 
 exports.fileContents = 
 fileContents = (f) -> 
-  # try (FS.readFileSync f).toString()
   try FS.readFileSync f, "utf8"
+
+
