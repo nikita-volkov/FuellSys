@@ -3,7 +3,7 @@
   "name": "FuellSys",
   "description": "Fuell library extension of system utilities for node.js",
   "keywords": ["fuell", "path", "directory", "folder", "filesystem", "environment", "system"],
-  "version": "0.1.2",
+  "version": "0.1.3",
   "homepage": null,
   "repository": {
     "type": "git",
