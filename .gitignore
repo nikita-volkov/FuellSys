@@ -4,3 +4,4 @@
 node_modules
 target
 lib
+npm-debug.log
