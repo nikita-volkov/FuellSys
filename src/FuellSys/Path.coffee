@@ -70,29 +70,30 @@ simplified = (p) ->
     r = Array.union (Number.times "..", debt), r
   Strings.interlayedUnion "/", Array.reversed r
 
-exports.exists = 
-exists = Path.existsSync
+exports.withoutSlash = 
+withoutSlash = (p) -> String.replacing /\/+$/, "", p
 
-exports.remove = 
-remove = (p, cb) ->
-  if not exists p
-    cb()
-  else
-    if FS.statSync(p).isFile()
-      FS.unlink p, cb
-    else 
-      Array.collect remove, (paths p), -> FS.rmdir p, cb
+exports.withSlash =
+withSlash = (p) ->
+  p1 = withoutSlash p
+  if p1 != "" then p1 + "/" 
+
+targetPath = (targetDir, dir, path) ->
+  String.prepending (withSlash targetDir),
+  relativeTo dir, path
+  # String.prepending "#{normalized targetDir}/",
+  # String.remainder "#{normalized dir}/",
+  # path
+
+exports.containerDir =
+containerDir = (path) -> dir withoutSlash path
 
 
 
 
 
 
-exports.fileExists = 
-fileExists = (p) -> (try FS.statSync p)?.isFile() ? false
 
-exports.dirExists =
-dirExists = (p) -> (try FS.statSync p)?.isDirectory() ? false
 
 exports.copy = 
 copy = (target, src, cb) ->
@@ -131,43 +132,6 @@ copyDir = (target, src, cb) ->
       cb
     )
 
-exports.deepPaths = 
-deepPaths = (p) ->
-  if dirExists p
-    ps = paths p
-    Arrays.union Array.appendedWith ps, Array.results deepPaths, ps
-
-exports.deepPathsWithExtension = 
-deepPathsWithExtension = (extension, dir) ->
-  Optional.result(
-    [Array.matches, [[Object.equals, extension], Path.extension]]
-    deepPaths dir
-  )
-
-exports.paths = 
-paths = (p) -> p + "/" + sp for sp in FS.readdirSync p
-
-exports.dirs = 
-dirs = (p) -> p1 for name in FS.readdirSync p when exists p1 = p + "/" + name
-
-
-exports.withoutSlash = 
-withoutSlash = (p) -> String.replacing /\/+$/, "", p
-
-exports.withSlash =
-withSlash = (p) ->
-  p1 = withoutSlash p
-  if p1 != "" then p1 + "/" 
-
-targetPath = (targetDir, dir, path) ->
-  String.prepending (withSlash targetDir),
-  relativeTo dir, path
-  # String.prepending "#{normalized targetDir}/",
-  # String.remainder "#{normalized dir}/",
-  # path
-
-exports.containerDir =
-containerDir = (path) -> dir withoutSlash path
 
 exports.createDir =
 createDir = (path, cb) ->
@@ -178,34 +142,30 @@ createDir = (path, cb) ->
     else
       createDir dir1, -> FS.mkdir path, "0777", cb
   else
-    cb()
+    cb?()
 
-
-exports.removeDirContents = 
-removeDirContents = (dir, cb) ->
-  [dirs, files] = Array.spread dirExists, paths dir
-  Actions.callParallelly(
-    Arrays.union [
-      Array.results ((file) -> (cb) -> removeFile file, cb), files
-      Array.results ((dir) -> (cb) -> removeDir dir, cb), dirs
-    ]
-    cb
-  )
-  # Array.each remove, (paths dir), cb
 
 exports.remove = 
 remove = (path, cb) ->
   if dirExists path then removeDir path, cb
   else if fileExists path then removeFile path, cb
-  else cb
+  else cb?()
+
+exports.removeFile = 
+removeFile = (path, cb) ->
+  try FS.unlink path, cb
+  catch e then cb?()
 
 exports.removeDir = 
 removeDir = (dir, cb) ->
-  if dirExists dir
-    removeDirContents dir, -> FS.rmdir dir, cb
+  removeDirContents dir, -> 
+    try FS.rmdir dir, cb
+    catch e then cb?()
 
-exports.removeFile = 
-removeFile = FS.unlink
+exports.removeDirContents = 
+removeDirContents = (dir, cb) ->
+  Array.each remove, ((paths dir) ? []), cb
+  
 
 
 exports.cleanDir = 
@@ -222,4 +182,30 @@ exports.fileContents =
 fileContents = (f) -> 
   try FS.readFileSync f, "utf8"
 
+
+
+exports.exists = 
+exists = Path.existsSync
+
+exports.fileExists = 
+fileExists = (p) -> 
+  (try FS.statSync p)?.isFile() ? false
+
+exports.dirExists =
+dirExists = (p) -> 
+  (try FS.statSync p)?.isDirectory() ? false
+
+exports.paths = 
+paths = (p) -> 
+  try p + "/" + sp for sp in FS.readdirSync p
+
+exports.dirs = 
+dirs = (p) -> 
+  try p1 for name in FS.readdirSync p when dirExists p1 = p + "/" + name
+
+exports.deepPaths = 
+deepPaths = (p) ->
+  ps = paths p
+  if ps
+    Arrays.union Array.appendedWith ps, Array.results deepPaths, ps
 
