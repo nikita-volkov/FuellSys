@@ -171,7 +171,7 @@ removeDirContents = (dir, cb) ->
 exports.cleanDir = 
 cleanDir = (dir, cb) -> 
   if dirExists dir then removeDirContents dir, cb
-  else create dir, cb
+  else createDir dir, cb
 
 exports.saveFile = 
 saveFile = (data, file, cb) -> 
